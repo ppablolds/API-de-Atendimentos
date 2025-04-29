@@ -21,7 +21,7 @@ public class AtendimentoController {
     }
 
     // Criar um novo atendimento
-    @PostMapping
+    @PostMapping("/criar-atendimento")
     public ResponseEntity<Atendimento> criarAtendimento(@RequestBody Atendimento atendimento) {
         try {
             Atendimento atendimentoSalvo = atendimentoService.salvarAtendimento(atendimento);
@@ -32,14 +32,14 @@ public class AtendimentoController {
     }
 
     // Listar todos os atendimentos
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Atendimento>> listarAtendimentos() {
         List<Atendimento> atendimentos = atendimentoService.listarAtendimentos();
         return new ResponseEntity<>(atendimentos, HttpStatus.OK);
     }
 
     // Buscar um atendimento pelo ID
-    @GetMapping("/{id}")
+    @GetMapping("/buscar-atendimento/{id}")
     public ResponseEntity<Atendimento> buscarAtendimento(@PathVariable Long id) {
         Optional<Atendimento> atendimento = atendimentoService.buscarAtendimentoPorId(id);
         if (atendimento.isPresent()){
@@ -50,7 +50,7 @@ public class AtendimentoController {
     }
 
     // Atualizar um atendimento
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar-atendimento/{id}")
     public ResponseEntity<Atendimento> atualizarAtendimento(@PathVariable long id, @RequestBody Atendimento atendimentoAtalizado) {
         Atendimento atendimento = atendimentoService.atualizarAtendimento(id, atendimentoAtalizado);
         if (atendimento != null) {
@@ -61,7 +61,7 @@ public class AtendimentoController {
     }
 
     // Excluir um atendimento
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar-atendimento/{id}")
     public ResponseEntity<Void> excluirAtendimento(@PathVariable Long id) {
         boolean excluido = atendimentoService.excluirAtendimento(id);
 
