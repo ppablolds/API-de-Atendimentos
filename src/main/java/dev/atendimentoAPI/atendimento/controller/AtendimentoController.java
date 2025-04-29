@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequestMapping("/atendimentos")
 public class AtendimentoController {
 
-    private AtendimentoService atendimentoService;
+    private final AtendimentoService atendimentoService;
 
     // Injetando o AtendimentoService no construtor
     public AtendimentoController(AtendimentoService atendimentoService) {
@@ -50,7 +50,7 @@ public class AtendimentoController {
     }
 
     // Atualizar um atendimento
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Atendimento> atualizarAtendimento(@PathVariable long id, @RequestBody Atendimento atendimentoAtalizado) {
         Atendimento atendimento = atendimentoService.atualizarAtendimento(id, atendimentoAtalizado);
         if (atendimento != null) {

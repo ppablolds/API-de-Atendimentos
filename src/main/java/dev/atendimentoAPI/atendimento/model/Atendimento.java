@@ -26,6 +26,12 @@ public class Atendimento {
         setStatus(status);
     }
 
+    @PrePersist
+    @PreUpdate
+    public void prePersist() {
+        this.dataHora = LocalDateTime.now();
+    }
+
     public Long getId() {
         return id;
     }
@@ -44,10 +50,6 @@ public class Atendimento {
 
     public LocalDateTime getDataHora() {
         return dataHora;
-    }
-
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
     }
 
     public StatusAtendimento getStatus() {
