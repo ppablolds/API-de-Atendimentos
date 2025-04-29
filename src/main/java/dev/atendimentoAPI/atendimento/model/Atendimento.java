@@ -1,5 +1,6 @@
 package dev.atendimentoAPI.atendimento.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,20 +9,26 @@ import java.time.LocalDateTime;
 public class Atendimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     private String cliente;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime dataHora;
+
+    private String descricao;
 
     @Enumerated(EnumType.STRING)
     private StatusAtendimento status;
 
     public Atendimento() {}
 
-    public Atendimento(Long id, String cliente, LocalDateTime dataHora, StatusAtendimento status) throws IllegalAccessException {
+    public Atendimento(Long id, String cliente, LocalDateTime dataHora, String descricao, StatusAtendimento status) throws IllegalAccessException {
         this.id = id;
         this.cliente = cliente;
         this.dataHora = dataHora;
+        this.descricao = descricao;
         this.status = status;
         setStatus(status);
     }
@@ -50,6 +57,14 @@ public class Atendimento {
 
     public LocalDateTime getDataHora() {
         return dataHora;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public StatusAtendimento getStatus() {
