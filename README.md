@@ -8,7 +8,7 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Java 17+**
+- **Java 21**
 - **Spring Boot**
     - Spring Web
     - Spring Data JPA
