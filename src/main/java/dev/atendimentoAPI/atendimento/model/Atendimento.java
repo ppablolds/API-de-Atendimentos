@@ -1,9 +1,6 @@
 package dev.atendimentoAPI.atendimento.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -15,11 +12,13 @@ public class Atendimento {
 
     private String cliente;
     private LocalDateTime dataHora;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private StatusAtendimento status;
 
     public Atendimento() {}
 
-    public Atendimento(Long id, String cliente, LocalDateTime dataHora, String status) {
+    public Atendimento(Long id, String cliente, LocalDateTime dataHora, StatusAtendimento status) {
         this.id = id;
         this.cliente = cliente;
         this.dataHora = dataHora;
@@ -50,11 +49,11 @@ public class Atendimento {
         this.dataHora = dataHora;
     }
 
-    public String getStatus() {
+    public StatusAtendimento getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusAtendimento status) {
         this.status = status;
     }
 }
