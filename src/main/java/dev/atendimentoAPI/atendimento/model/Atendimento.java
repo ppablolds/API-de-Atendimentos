@@ -18,11 +18,12 @@ public class Atendimento {
 
     public Atendimento() {}
 
-    public Atendimento(Long id, String cliente, LocalDateTime dataHora, StatusAtendimento status) {
+    public Atendimento(Long id, String cliente, LocalDateTime dataHora, StatusAtendimento status) throws IllegalAccessException {
         this.id = id;
         this.cliente = cliente;
         this.dataHora = dataHora;
         this.status = status;
+        setStatus(status);
     }
 
     public Long getId() {
@@ -53,7 +54,10 @@ public class Atendimento {
         return status;
     }
 
-    public void setStatus(StatusAtendimento status) {
+    public void setStatus(StatusAtendimento status) throws IllegalAccessException {
+        if (status == null) {
+            throw new IllegalAccessException("Status não pode ser nulo!");
+        }
         this.status = status;
     }
 }

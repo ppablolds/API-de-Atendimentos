@@ -1,6 +1,7 @@
 package dev.atendimentoAPI.atendimento.service;
 
 import dev.atendimentoAPI.atendimento.model.Atendimento;
+import dev.atendimentoAPI.atendimento.model.StatusAtendimento;
 import dev.atendimentoAPI.atendimento.repository.AtendimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class AtendimentoService {
 
     // Metodo responsável por salvar um atendimento no banco.
     public Atendimento salvarAtendimento(Atendimento atendimento) {
+        validarStatus(atendimento.getStatus()); // Valida o status
         return atendimentoRepository.save(atendimento);
     }
 
@@ -37,6 +39,7 @@ public class AtendimentoService {
     // Metodo que atualiza um atendimento existente com base no ID.
     public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) {
         if (atendimentoRepository.existsById(id)){
+            validarStatus(atendimentoAtualizado.getStatus());
             atendimentoAtualizado.setId(id);
             return atendimentoRepository.save(atendimentoAtualizado);
         }
@@ -50,5 +53,11 @@ public class AtendimentoService {
             return true;
         }
         return false; // Depois criar uma exceção personalizada
+    }
+
+    private void validarStatus(StatusAtendimento status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status inválido: não pode ser nulo!");
+        }
     }
 }
