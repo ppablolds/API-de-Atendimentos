@@ -81,9 +81,9 @@ cd gerenciador-atendimentos
  - 📊 Gerar relatórios por status
 
 ## 👨‍💻 Autor
-Pablo Silva
-🔗 [https://linkedin.com/in/ppablods](LinkedIn)
+Pablo Silva <br />
+🔗 [https://linkedin.com/in/ppablods](LinkedIn)<br />
 📧 ls8pablo@gmail.com
 
 ## 📄 Licença
-Este projeto está licenciado sob a [LICENSE](MIT License).
+Este projeto está licenciado sob a [MIT LICENSE](LICENSE).
