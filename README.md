@@ -13,7 +13,8 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
     - Spring Web
     - Spring Data JPA
     - Spring Validation
-- **H2 Database**
+- **H2 Database (desenvolvimento)**
+- **MySQL (produção)**
 - **Swagger (Springdoc OpenAPI)**
 - **Maven**
 
