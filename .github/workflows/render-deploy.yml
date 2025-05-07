@@ -3,7 +3,7 @@ name: Build and Deploy to Render
 on:
   push:
     branches:
-      - master # ou sua branch principal
+      - master
 
 jobs:
   build:
