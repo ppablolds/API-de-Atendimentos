@@ -1,14 +1,13 @@
-# Usa a imagem do OpenJDK 21 baseada em Alpine (leve e eficiente)
-FROM eclipse-temurin:21-jdk-alpine
-
-# Define o diretório de trabalho dentro do container
+# Etapa 1 - Build
+FROM maven:3.9.4-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copia o JAR gerado pelo Maven para dentro do container
-COPY target/*.jar app.jar
-
-# Expõe a porta padrão usada pelo Spring Boot
+# Etapa 2 - Execução
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+COPY --from=builder /app/target/atendimento-0.0.1-SNAPSHOT.jar app.jar
+ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
-
-# Comando para rodar o app
 ENTRYPOINT ["java", "-jar", "app.jar"]

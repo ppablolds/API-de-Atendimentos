@@ -13,7 +13,8 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
     - Spring Web
     - Spring Data JPA
     - Spring Validation
-- **H2 Database**
+- **H2 Database (desenvolvimento)**
+- **MySQL (produção)**
 - **Swagger (Springdoc OpenAPI)**
 - **Maven**
 
@@ -75,7 +76,7 @@ cd gerenciador-atendimentos
 ```
 
 ## 💡 Próximos Passos
- - 🔜 Migrar do banco H2 para MySQL 
+ - ✅ Migrar do banco H2 para MySQL ✅
  - 🔒 Implementar autenticação com Spring Security 
  - 🧪 Adicionar testes unitários e de integração 
  - 📊 Gerar relatórios por status
