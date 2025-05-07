@@ -1,0 +1,81 @@
+name: Build and Deploy to Render
+
+on: [push] # Dispara o workflow em cada push para qualquer branch
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-jar
+          path: target/*.jar
+
+  deploy:
+    name: Deploy to Render
+    needs: build # Garante que o job de build seja concluído com sucesso
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: app-jar
+
+      - name: Deploy to Render
+        uses: actions/github-script@v6
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        with:
+          script: |
+            const fetch = require('node-fetch');
+            const apiKey = process.env.RENDER_API_KEY;
+            const serviceId = process.env.RENDER_SERVICE_ID;
+
+            if (!apiKey || !serviceId) {
+              console.error("RENDER_API_KEY and RENDER_SERVICE_ID secrets must be defined.");
+              process.exit(1);
+            }
+
+            const deployUrl = `https://api.render.com/v1/services/${serviceId}/deploy`;
+
+            const response = await fetch(deployUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+              },
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log(`Deploy initiated successfully. Deploy ID: ${data.deploy.id}`);
+            } else {
+              const error = await response.text();
+              console.error(`Failed to trigger deploy: ${response.status} - ${error}`);
+              process.exit(1);
+            }
