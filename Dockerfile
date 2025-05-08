@@ -1,13 +1,25 @@
-# Etapa 1 - Build
-FROM maven:3.9.4-eclipse-temurin-21-alpine AS builder
+# Etapa de build com Maven
+FROM maven:4.0.0-eclipse-temurin-21 AS build
 WORKDIR /app
-COPY . .
+
+# Copia os arquivos do projeto
+COPY pom.xml .
+COPY src ./src
+
+# Build do projeto
 RUN mvn clean package -DskipTests
 
-# Etapa 2 - Execução
-FROM eclipse-temurin:21-jdk-alpine
+# Etapa de runtime com JDK leve
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=builder /app/target/atendimento-0.0.1-SNAPSHOT.jar app.jar
+
+# Copia o .jar gerado na etapa anterior
+COPY --from=build /app/target/*.jar app.jar
+
+# Expõe a porta da aplicação (ajuste conforme necessário)
 ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
+
+# Comando de inicialização
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
