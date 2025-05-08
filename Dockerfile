@@ -1,6 +1,12 @@
 # Etapa de build com Maven
-FROM maven:4.0.0-eclipse-temurin-21 AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
+
+# Instalação manual do Maven 4.0.0
+RUN curl -fsSL https://downloads.apache.org/maven/maven-4/4.0.0-alpha-7/binaries/apache-maven-4.0.0-alpha-7-bin.tar.gz | tar -xz
+RUN mv apache-maven-4.0.0-alpha-7 /opt/maven
+ENV MAVEN_HOME=/opt/maven
+ENV PATH=$MAVEN_HOME/bin:$PATH
 
 # Copia os arquivos do projeto
 COPY pom.xml .
