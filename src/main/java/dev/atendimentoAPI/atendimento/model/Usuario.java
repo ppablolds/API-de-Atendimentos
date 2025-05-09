@@ -13,56 +13,25 @@ public class Usuario {
     private long id;
 
     @NotBlank
-    @Column(nullable = false, unique = true)
-    private String login;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String senha;
-
-    @NotBlank
-    @Column(nullable = false)
-    private String nome;
-
-    @Email
     @Column(unique = true)
     private String email;
 
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String senha;
+
     public Usuario() {}
 
-    public Usuario(String login, String senha, String nome, String email) {
-        this.login = login;
+    public Usuario(String username, String senha, String email) {
+        this.username = username;
         this.senha = senha;
-        this.nome = nome;
         this.email = email;
     }
 
     public long getId() {
         return id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public String getEmail() {
@@ -71,5 +40,21 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }
