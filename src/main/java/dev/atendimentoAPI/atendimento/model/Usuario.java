@@ -1,5 +1,8 @@
 package dev.atendimentoAPI.atendimento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -10,23 +13,28 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private long id;
 
     @NotBlank
+    @Email
     @Column(unique = true)
+    @JsonView({Views.Registro.class, Views.Login.class})
     private String email;
 
     @NotBlank
+    @JsonView(Views.Registro.class)
     private String username;
 
     @NotBlank
-    private String senha;
+    @JsonView({Views.Registro.class, Views.Login.class})
+    private String password;
 
     public Usuario() {}
 
-    public Usuario(String username, String senha, String email) {
+    public Usuario(String username, String password, String email) {
         this.username = username;
-        this.senha = senha;
+        this.password = password;
         this.email = email;
     }
 
@@ -50,11 +58,11 @@ public class Usuario {
         this.username = username;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
