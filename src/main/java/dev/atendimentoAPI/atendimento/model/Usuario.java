@@ -23,10 +23,12 @@ public class Usuario {
     private String email;
 
     @NotBlank
+    @JsonIgnore
     @JsonView(Views.Registro.class)
     private String username;
 
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonView({Views.Registro.class, Views.Login.class})
     private String password;
 
