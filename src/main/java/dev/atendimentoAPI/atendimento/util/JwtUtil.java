@@ -12,15 +12,17 @@ import java.util.Date;
 public class JwtUtil {
 
     // Agora a chave secreta vem de um arquivo de propriedades
-    @Value("${jwt.secret.key}")
-    private String secretKey;
+    // @Value("${jwt.secret.key}")
+    // private String SECRET_KEY;
+
+    private final String SECRET_KEY = "dc45fbdbc4e58d8e339de032b60ea9c19d9584ff40700e580cdaedeeb805133c417311d760ab7b257e96284a0c25852bb7e6c24421826d2783be125c9089dc36b25e2c713768d916d8740ce1280aa0ec82541256deb9190596417da520fa612ad8031f4a8304866220a80f6d49afdff8126087f4db591834a7a690a1bae7dd84023154f120098bea62a7190a9cba4470e4f86fd56ea56fd911de23b3c554a63c89d26a0b0b6fd225d36f0f6b1a0e2f371b20a9630d40e32e98cc8c5e7b60fba1dfa959a52abdafb5a3a189108df4bbd740407a1c96b448b2fdf718881017809bb37742d323fee5a993e3528aaff068c486730e0a54614bbb05e1fc9ec71db6ed";
 
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hora
 
     private final Key key;
 
     public JwtUtil() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
     // Geração do token com o username (email)
