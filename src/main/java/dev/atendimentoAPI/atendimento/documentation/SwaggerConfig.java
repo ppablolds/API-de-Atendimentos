@@ -2,6 +2,8 @@ package dev.atendimentoAPI.atendimento.documentation;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,7 +22,7 @@ public class SwaggerConfig {
                     .addSecuritySchemes("bearerAuth",
                         new SecurityScheme()
                             .name("Authorization")
-                            .type(Type.HTTP)
+                            .type(SecurityScheme.Type.HTTP)
                             .scheme("bearer")
                             .bearerFormat("JWT")));
     }
