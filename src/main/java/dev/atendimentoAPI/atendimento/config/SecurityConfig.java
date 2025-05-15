@@ -26,14 +26,16 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UsuarioServiceImpl usuarioService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private UsuarioServiceImpl usuarioService;
 
     @Autowired
-    public SecurityConfig(UsuarioServiceImpl usuarioService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    /*public SecurityConfig(UsuarioServiceImpl usuarioService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.usuarioService = usuarioService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+    }*/
 
     @Bean
     public UserDetailsService userDetailsService() {
