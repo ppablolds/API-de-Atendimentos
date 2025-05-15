@@ -15,15 +15,16 @@ public class JwtUtil {
     // @Value("${jwt.secret.key}")
     // private String SECRET_KEY;
 
-    private final String SECRET_KEY = "dc45fbdbc4e58d8e339de032b60ea9c19d9584ff40700e580cdaedeeb805133c417311d760ab7b257e96284a0c25852bb7e6c24421826d2783be125c9089dc36b25e2c713768d916d8740ce1280aa0ec82541256deb9190596417da520fa612ad8031f4a8304866220a80f6d49afdff8126087f4db591834a7a690a1bae7dd84023154f120098bea62a7190a9cba4470e4f86fd56ea56fd911de23b3c554a63c89d26a0b0b6fd225d36f0f6b1a0e2f371b20a9630d40e32e98cc8c5e7b60fba1dfa959a52abdafb5a3a189108df4bbd740407a1c96b448b2fdf718881017809bb37742d323fee5a993e3528aaff068c486730e0a54614bbb05e1fc9ec71db6ed";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hora
 
-    private final Key key;
+    //private final Key key;
 
-    public JwtUtil() {
-        this.key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    }
+    /*public JwtUtil() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }*/
 
     // Geração do token com o username (email)
     public String generateToken(String username) {
@@ -31,14 +32,18 @@ public class JwtUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(getChaveAssinatura(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    private Key getChaveAssinatura() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     // Extração do username (email) do token
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getChaveAssinatura())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -48,7 +53,7 @@ public class JwtUtil {
     // Validação do token
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(getChaveAssinatura()).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             // O token expirou
