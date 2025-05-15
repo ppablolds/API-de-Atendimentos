@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,16 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String jwt = authHeader.substring(7);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            // Verifique a validade do token antes de extrair o username
+        String jwt = authHeader.substring(7);
+        String username = jwtUtil.extractUsername(jwt);
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtUtil.validateToken(jwt)) {
-                String username = jwtUtil.extractUsername(jwt);
-
-                // Verifique se o username não é nulo e se o usuário não foi autenticado previamente
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Carregue o usuário com base no email (não no username)
+                try {
                     var userDetails = usuarioService.loadUserByUsername(username);
 
                     var authToken = new UsernamePasswordAuthenticationToken(
@@ -48,13 +50,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                    // Defina o contexto de segurança com o token de autenticação
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                } catch (UsernameNotFoundException e) {
+                    logger.warn("Usuário não encontrado: " + username);
                 }
+            } else {
+                logger.warn("Token JWT inválido");
             }
         }
 
-        // Continue o filtro
         filterChain.doFilter(request, response);
     }
 }

@@ -29,4 +29,8 @@ public class UsuarioService {
     public Optional<Usuario> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
+
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepository.findId(id);
+    }
 }
