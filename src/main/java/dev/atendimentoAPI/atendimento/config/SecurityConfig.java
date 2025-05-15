@@ -68,7 +68,12 @@ public class SecurityConfig {
                 .headers(AbstractHttpConfigurer::disable)
                 .cors(cors -> {}) // CORS configurações personalizadas
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/atendimentos/**", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Rotas públicas
+                        .requestMatchers("/auth/**",
+                                         "/atendimentos/**",
+                                         "/h2-console/**",
+                                         "/swagger-ui/**",
+                                         "/v3/api-docs/**",
+                                        "/swagger-ui.html").permitAll() // Rotas públicas
                         .anyRequest().authenticated() // Rotas privadas requerem autenticação
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
