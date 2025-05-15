@@ -1,5 +1,6 @@
 package dev.atendimentoAPI.atendimento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -15,7 +16,7 @@ public class Atendimento {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonIgnore
     private Usuario usuario; // Relacionamento com o usuário (quem criou o atendimento)
 
     @Column(nullable = false)
