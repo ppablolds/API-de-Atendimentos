@@ -24,12 +24,12 @@ public class Atendimento {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     //@Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    @JoinColumn(name = "data_hora")
+    @Column(name = "data_hora", nullable = false)
     private LocalDate dataAtendimento;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true )
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private StatusAtendimento status;
 
     public Atendimento() {}
