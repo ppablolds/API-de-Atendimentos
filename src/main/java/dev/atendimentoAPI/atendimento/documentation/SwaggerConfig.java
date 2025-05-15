@@ -8,11 +8,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI api() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Atendimentos")
-                        .version("1.0")
-                        .description("Documentação da API para gerenciamento de atendimentos."));
+                    .title("API de Atendimentos")
+                    .description("Documentação da API")
+                    .version("v1.0"))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new io.swagger.v3.oas.models.Components()
+                    .addSecuritySchemes("bearerAuth",
+                        new SecurityScheme()
+                            .name("Authorization")
+                            .type(Type.HTTP)
+                            .scheme("bearer")
+                            .bearerFormat("JWT")));
     }
 }
