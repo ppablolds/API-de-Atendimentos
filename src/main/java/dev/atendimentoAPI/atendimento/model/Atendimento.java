@@ -14,7 +14,7 @@ public class Atendimento {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Usuario usuario; // Relacionamento com o usuário (quem criou o atendimento)
 

@@ -77,7 +77,7 @@ cd gerenciador-atendimentos
 
 ## 💡 Próximos Passos
  - ✅ Migrar do banco H2 para MySQL ✅
- - 🔒 Implementar autenticação com Spring Security 
+ - ✅ Implementar autenticação com Spring Security e JWT ✅
  - 🧪 Adicionar testes unitários e de integração 
  - 📊 Gerar relatórios por status
 
