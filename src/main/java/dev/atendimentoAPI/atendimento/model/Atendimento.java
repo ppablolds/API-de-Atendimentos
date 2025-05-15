@@ -3,7 +3,8 @@ package dev.atendimentoAPI.atendimento.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 public class Atendimento {
@@ -12,31 +13,31 @@ public class Atendimento {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    private String cliente;
-
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime dataHora;
+    private Usuario usuario; // Relacionamento com o usuário (quem criou o atendimento)
 
+    @Column(nullable = false)
     private String descricao;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    //@Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private LocalDate dataAtendimento;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true )
     private StatusAtendimento status;
 
     public Atendimento() {}
 
-    public Atendimento(Long id, String cliente, LocalDateTime dataHora, String descricao, StatusAtendimento status) throws IllegalAccessException {
+    public Atendimento(Long id, Usuario usuario, LocalDate dataAtendimento, String descricao, StatusAtendimento status) throws IllegalAccessException {
         this.id = id;
-        this.cliente = cliente;
-        this.dataHora = dataHora;
+        this.usuario = usuario;
+        this.dataAtendimento = dataAtendimento;
         this.descricao = descricao;
         this.status = status;
-        setStatus(status);
-    }
-
-    @PrePersist
-    @PreUpdate
-    public void prePersist() {
-        this.dataHora = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -47,16 +48,25 @@ public class Atendimento {
         this.id = id;
     }
 
-    public String getCliente() {
-        return cliente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
+    public LocalDate getDataAtendimento() {
+        return dataAtendimento;
+    }
+
+    public void setDataAtendimento(LocalDate dataAtendimento) {
+        this.dataAtendimento = dataAtendimento;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.dataAtendimento = LocalDate.now();
     }
 
     public String getDescricao() {

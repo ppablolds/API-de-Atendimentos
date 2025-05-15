@@ -59,10 +59,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/auth/**", "/atendimentos/**", "/h2-console/**")) // Ignora CSRF para o H2
+                .headers(AbstractHttpConfigurer::disable)
                 .cors(cors -> {}) // CORS configurações personalizadas
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/h2-console", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Rotas públicas
+                        .requestMatchers("/auth/**", "/atendimentos/**", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Rotas públicas
                         .anyRequest().authenticated() // Rotas privadas requerem autenticação
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

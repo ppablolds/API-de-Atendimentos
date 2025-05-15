@@ -2,27 +2,37 @@ package dev.atendimentoAPI.atendimento.service;
 
 import dev.atendimentoAPI.atendimento.model.Atendimento;
 import dev.atendimentoAPI.atendimento.model.StatusAtendimento;
+import dev.atendimentoAPI.atendimento.model.Usuario;
 import dev.atendimentoAPI.atendimento.repository.AtendimentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AtendimentoService {
 
-    private final AtendimentoRepository atendimentoRepository;
+    @Autowired
+    private AtendimentoRepository atendimentoRepository;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     // Injetando o AtendimentoRepository no construtor
-    @Autowired
     public AtendimentoService(AtendimentoRepository atendimentoRepository) {
         this.atendimentoRepository = atendimentoRepository;
     }
 
     // Metodo responsável por salvar um atendimento no banco.
-    public Atendimento salvarAtendimento(Atendimento atendimento) {
-        validarStatus(atendimento.getStatus()); // Valida o status
+    public Atendimento criarAtendimento(Long usuarioId, Atendimento atendimento) throws IllegalAccessException {
+        Usuario usuario = usuarioService.buscarPorId(usuarioId);
+        atendimento.setUsuario(usuario);
+        atendimento.setDescricao(atendimento.getDescricao());
+        atendimento.setDataAtendimento(LocalDate.now());
+        atendimento.setStatus(StatusAtendimento.ABERTO);
         return atendimentoRepository.save(atendimento);
     }
 
@@ -37,13 +47,21 @@ public class AtendimentoService {
     }
 
     // Metodo que atualiza um atendimento existente com base no ID.
-    public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) {
-        if (atendimentoRepository.existsById(id)){
+    public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) throws IllegalAccessException {
+        return atendimentoRepository.findById(id).map(atendimentoExistente -> {
             validarStatus(atendimentoAtualizado.getStatus());
-            atendimentoAtualizado.setId(id);
-            return atendimentoRepository.save(atendimentoAtualizado);
-        }
-        return null; // Depois criar uma exceção personalizada
+
+            //atendimentoExistente.setDescricao(atendimentoAtualizado.getDescricao());
+            try {
+                atendimentoExistente.setStatus(StatusAtendimento.EM_ANDAMENTO);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            atendimentoExistente.setDataAtendimento(LocalDate.now()); // se quiser atualizar a data
+            atendimentoExistente.preUpdate();
+
+            return atendimentoRepository.save(atendimentoExistente);
+        }).orElse(null); // ou lançar exceção personalizada
     }
 
     // Metodo que exclui um atendimento pelo ID.

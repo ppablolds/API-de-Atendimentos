@@ -1,9 +1,13 @@
 package dev.atendimentoAPI.atendimento.controller;
 
 import dev.atendimentoAPI.atendimento.model.Atendimento;
+import dev.atendimentoAPI.atendimento.model.Usuario;
 import dev.atendimentoAPI.atendimento.service.AtendimentoService;
+import dev.atendimentoAPI.atendimento.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,22 +17,23 @@ import java.util.Optional;
 @RequestMapping("/atendimentos")
 public class AtendimentoController {
 
-    private final AtendimentoService atendimentoService;
+    @Autowired
+    private AtendimentoService atendimentoService;
 
-    // Injetando o AtendimentoService no construtor
-    public AtendimentoController(AtendimentoService atendimentoService) {
-        this.atendimentoService = atendimentoService;
-    }
+    @Autowired
+    private UsuarioService usuarioService;
 
     // Criar um novo atendimento
     @PostMapping("/criar-atendimento")
-    public ResponseEntity<Atendimento> criarAtendimento(@RequestBody Atendimento atendimento) {
-        try {
-            Atendimento atendimentoSalvo = atendimentoService.salvarAtendimento(atendimento);
-            return new ResponseEntity<>(atendimentoSalvo, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Atendimento> criarAtendimento(@RequestBody Atendimento atendimento) throws IllegalAccessException {
+        // Recupera o email do usuário autenticado
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // Busca o usuário no banco
+        Optional<Usuario> usuario = usuarioService.buscarPorEmail(email);
+
+        Atendimento atendimentoCriado = atendimentoService.criarAtendimento(usuario.get().getId(), atendimento);
+        return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoCriado);
     }
 
     // Listar todos os atendimentos
@@ -51,7 +56,7 @@ public class AtendimentoController {
 
     // Atualizar um atendimento
     @PutMapping("/atualizar-atendimento/{id}")
-    public ResponseEntity<Atendimento> atualizarAtendimento(@PathVariable long id, @RequestBody Atendimento atendimentoAtalizado) {
+    public ResponseEntity<Atendimento> atualizarAtendimento(@PathVariable Long id, @RequestBody Atendimento atendimentoAtalizado) throws IllegalAccessException {
         Atendimento atendimento = atendimentoService.atualizarAtendimento(id, atendimentoAtalizado);
         if (atendimento != null) {
             return new ResponseEntity<>(atendimento, HttpStatus.OK);
