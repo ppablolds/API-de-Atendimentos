@@ -2,6 +2,7 @@ package dev.atendimentoAPI.atendimento.config;
 
 import dev.atendimentoAPI.atendimento.security.JwtAuthenticationFilter;
 import dev.atendimentoAPI.atendimento.service.UsuarioServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -28,6 +29,7 @@ public class SecurityConfig {
     private final UsuarioServiceImpl usuarioService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Autowired
     public SecurityConfig(UsuarioServiceImpl usuarioService, JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.usuarioService = usuarioService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;

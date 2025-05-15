@@ -5,6 +5,7 @@ import dev.atendimentoAPI.atendimento.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UsuarioServiceImpl usuarioService;
 
+    @Autowired
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UsuarioServiceImpl usuarioService) {
         this.jwtUtil = jwtUtil;
         this.usuarioService = usuarioService;
