@@ -14,7 +14,7 @@ public class SwaggerConfig {
                     .title("API de Atendimentos")
                     .description("Documentação da API")
                     .version("v1.0")
-                    .description("Documentação da API para gerenciamento de atendimentos."));
+                    .description("Documentação da API para gerenciamento de atendimentos."))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
                     .addSecuritySchemes("bearerAuth",
