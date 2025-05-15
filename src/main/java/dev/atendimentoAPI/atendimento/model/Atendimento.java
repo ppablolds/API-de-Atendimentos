@@ -24,6 +24,7 @@ public class Atendimento {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     //@Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
+    @JoinColumn(name = "data_hora")
     private LocalDate dataAtendimento;
 
     @Enumerated(EnumType.STRING)
