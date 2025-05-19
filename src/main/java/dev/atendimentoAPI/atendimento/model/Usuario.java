@@ -14,16 +14,17 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonView(Views.BuscarAtendimento.class)
     private Long id;
 
     @NotBlank
     @Email
     @Column(unique = true)
-    @JsonView({Views.Registro.class, Views.Login.class})
+    @JsonView({Views.Registro.class, Views.Login.class, Views.BuscarAtendimento.class})
     private String email;
 
     @NotBlank
-    @JsonView(Views.Registro.class)
+    @JsonView({Views.Registro.class, Views.BuscarAtendimento.class})
     private String username;
 
     @NotBlank
