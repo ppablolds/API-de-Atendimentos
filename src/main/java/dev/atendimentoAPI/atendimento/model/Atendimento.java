@@ -2,24 +2,29 @@ package dev.atendimentoAPI.atendimento.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
+@Table(name = "atendimentos")
 public class Atendimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonView(Views.BuscarAtendimento.class)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    @JsonIgnore
+    @JsonView(Views.BuscarAtendimento.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Usuario usuario; // Relacionamento com o usuário (quem criou o atendimento)
 
     @Column(nullable = false)
+    @JsonView({Views.CriarAtendimento.class, Views.BuscarAtendimento.class})
     private String descricao;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -29,13 +34,13 @@ public class Atendimento {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true )
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonView(Views.BuscarAtendimento.class)
+    //@JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private StatusAtendimento status;
 
     public Atendimento() {}
 
-    public Atendimento(Long id, Usuario usuario, LocalDate dataAtendimento, String descricao, StatusAtendimento status) throws IllegalAccessException {
-        this.id = id;
+    public Atendimento(Usuario usuario, LocalDate dataAtendimento, String descricao, StatusAtendimento status) throws IllegalAccessException {
         this.usuario = usuario;
         this.dataAtendimento = dataAtendimento;
         this.descricao = descricao;
@@ -44,10 +49,6 @@ public class Atendimento {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Usuario getUsuario() {
@@ -83,9 +84,9 @@ public class Atendimento {
         return status;
     }
 
-    public void setStatus(StatusAtendimento status) throws IllegalAccessException {
+    public void setStatus(StatusAtendimento status) {
         if (status == null) {
-            throw new IllegalAccessException("Status não pode ser nulo!");
+            throw new IllegalArgumentException("Status não pode ser nulo!");
         }
         this.status = status;
     }

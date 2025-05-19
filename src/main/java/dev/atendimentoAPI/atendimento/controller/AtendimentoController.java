@@ -1,12 +1,15 @@
 package dev.atendimentoAPI.atendimento.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import dev.atendimentoAPI.atendimento.model.Atendimento;
 import dev.atendimentoAPI.atendimento.model.Usuario;
+import dev.atendimentoAPI.atendimento.model.Views;
 import dev.atendimentoAPI.atendimento.service.AtendimentoService;
 import dev.atendimentoAPI.atendimento.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,19 +28,27 @@ public class AtendimentoController {
 
     // Criar um novo atendimento
     @PostMapping("/criar-atendimento")
-    public ResponseEntity<Atendimento> criarAtendimento(@RequestBody Atendimento atendimento) throws IllegalAccessException {
-        // Recupera o email do usuário autenticado
+    @JsonView(Views.BuscarAtendimento.class)
+    public ResponseEntity<Atendimento> criarAtendimento(@RequestBody @JsonView(Views.CriarAtendimento.class)
+                                                            Atendimento atendimento) throws IllegalAccessException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Usuario> usuarioOptional = usuarioService.buscarPorEmail(email);
 
-        // Busca o usuário no banco
-        Optional<Usuario> usuario = usuarioService.buscarPorEmail(email);
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        Atendimento atendimentoCriado = atendimentoService.criarAtendimento(usuario.get().getId(), atendimento);
+        Usuario usuario = usuarioOptional.get();
+
+        System.out.println("Status recebido no Controller: " + atendimento.getStatus());
+
+        Atendimento atendimentoCriado = atendimentoService.criarAtendimento(usuario, atendimento);
         return ResponseEntity.status(HttpStatus.CREATED).body(atendimentoCriado);
     }
 
     // Listar todos os atendimentos
     @GetMapping("/")
+    @JsonView(Views.BuscarAtendimento.class)
     public ResponseEntity<List<Atendimento>> listarAtendimentos() {
         List<Atendimento> atendimentos = atendimentoService.listarAtendimentos();
         return new ResponseEntity<>(atendimentos, HttpStatus.OK);

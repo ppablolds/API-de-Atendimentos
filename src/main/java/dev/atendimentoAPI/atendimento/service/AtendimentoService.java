@@ -27,11 +27,10 @@ public class AtendimentoService {
     }
 
     // Metodo responsável por salvar um atendimento no banco.
-    public Atendimento criarAtendimento(Long usuarioId, Atendimento atendimento) throws IllegalAccessException {
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
+    public Atendimento criarAtendimento(Usuario usuario, Atendimento atendimento) throws IllegalAccessException {
         atendimento.setUsuario(usuario);
-        atendimento.setDescricao(atendimento.getDescricao());
         atendimento.setDataAtendimento(LocalDate.now());
+        System.out.println("Status antes de setar no Service: " + atendimento.getStatus());
         atendimento.setStatus(StatusAtendimento.ABERTO);
         return atendimentoRepository.save(atendimento);
     }
@@ -49,14 +48,7 @@ public class AtendimentoService {
     // Metodo que atualiza um atendimento existente com base no ID.
     public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) throws IllegalAccessException {
         return atendimentoRepository.findById(id).map(atendimentoExistente -> {
-            validarStatus(atendimentoAtualizado.getStatus());
-
-            //atendimentoExistente.setDescricao(atendimentoAtualizado.getDescricao());
-            try {
-                atendimentoExistente.setStatus(StatusAtendimento.EM_ANDAMENTO);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            atendimentoExistente.setStatus(StatusAtendimento.EM_ANDAMENTO);
             atendimentoExistente.setDataAtendimento(LocalDate.now()); // se quiser atualizar a data
             atendimentoExistente.preUpdate();
 
