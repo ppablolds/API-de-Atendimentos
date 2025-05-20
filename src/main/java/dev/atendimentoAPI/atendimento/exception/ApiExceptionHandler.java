@@ -22,8 +22,8 @@ public class ApiExceptionHandler {
     }
 
     // Exceção de recurso não encontrado
-    @ExceptionHandler(RecursoNaoEncontradoException.class)
-    public ResponseEntity<Object> handleRecursoNaoEncontrado(RecursoNaoEncontradoException exception) {
+    @ExceptionHandler(AtendimentoNaoEncontradoException.class)
+    public ResponseEntity<Object> handleAtendimentoNaoEncontrado(AtendimentoNaoEncontradoException exception) {
         Map<String, String> erro = Map.of("erro", exception.getMessage());
         return new ResponseEntity<>(erro, HttpStatus.NOT_FOUND);
     }
