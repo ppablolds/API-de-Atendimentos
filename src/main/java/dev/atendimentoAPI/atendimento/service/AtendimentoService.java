@@ -1,5 +1,6 @@
 package dev.atendimentoAPI.atendimento.service;
 
+import dev.atendimentoAPI.atendimento.exception.AtendimentoNaoEncontradoException;
 import dev.atendimentoAPI.atendimento.model.Atendimento;
 import dev.atendimentoAPI.atendimento.model.StatusAtendimento;
 import dev.atendimentoAPI.atendimento.model.Usuario;
@@ -46,14 +47,14 @@ public class AtendimentoService {
     }
 
     // Metodo que atualiza um atendimento existente com base no ID.
-    public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) throws IllegalAccessException {
+    public Atendimento atualizarAtendimento(Long id, Atendimento atendimentoAtualizado) {
         return atendimentoRepository.findById(id).map(atendimentoExistente -> {
             atendimentoExistente.setStatus(StatusAtendimento.EM_ANDAMENTO);
             atendimentoExistente.setDataAtendimento(LocalDate.now()); // se quiser atualizar a data
             atendimentoExistente.preUpdate();
 
             return atendimentoRepository.save(atendimentoExistente);
-        }).orElse(null); // ou lançar exceção personalizada
+        }).orElseThrow(() -> new AtendimentoNaoEncontradoException("Atendimento não encontrado!"));
     }
 
     // Metodo que exclui um atendimento pelo ID.
@@ -62,7 +63,7 @@ public class AtendimentoService {
             atendimentoRepository.deleteById(id);
             return true;
         }
-        return false; // Depois criar uma exceção personalizada
+        return false;
     }
 
     private void validarStatus(StatusAtendimento status) {
