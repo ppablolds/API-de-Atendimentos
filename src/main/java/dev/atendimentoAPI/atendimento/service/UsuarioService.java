@@ -1,5 +1,6 @@
 package dev.atendimentoAPI.atendimento.service;
 
+import dev.atendimentoAPI.atendimento.exception.EmailJaCadastradoException;
 import dev.atendimentoAPI.atendimento.model.Usuario;
 import dev.atendimentoAPI.atendimento.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class UsuarioService {
     }
 
     public Usuario salvarUsuario(Usuario usuario) {
+        Optional<Usuario> existente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (existente.isPresent()) {
+            throw new EmailJaCadastradoException("O email " + usuario.getEmail() + " já está em uso.");
+        }
+
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword())); // Criptografa a senha
         return usuarioRepository.save(usuario);
     }

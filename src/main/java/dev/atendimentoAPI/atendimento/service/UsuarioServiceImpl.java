@@ -1,5 +1,6 @@
 package dev.atendimentoAPI.atendimento.service;
 
+import dev.atendimentoAPI.atendimento.exception.UsuarioNaoEncontradoException;
 import dev.atendimentoAPI.atendimento.model.Usuario;
 import dev.atendimentoAPI.atendimento.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class UsuarioServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o e-mail: " + email));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado com o e-mail: " + email));
 
         return new User(usuario.getEmail(), usuario.getPassword(), Collections.emptyList());
     }
