@@ -13,6 +13,18 @@ import java.util.Map;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    // Exceção caso o usuário não seja encontrado
+    @ExceptionHandler(UsuarioNaoEncontradoException.class)
+    public ResponseEntity<String> handleUsuarioNaoEncontrado(UsuarioNaoEncontradoException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    // Exceção caso o usuário tente cadastrar com o mesmo email
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<String> handleEmailJaCadastrado(EmailJaCadastradoException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
     // Erros de validação (ex: campos inválidos com @Valid)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationException(MethodArgumentNotValidException exception) {
