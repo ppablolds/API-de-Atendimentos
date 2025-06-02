@@ -2,7 +2,7 @@
 
 Este é um projeto de API REST desenvolvido com **Spring Boot**, cujo objetivo é permitir o **cadastro, atualização, listagem e exclusão de atendimentos** realizados por uma empresa ou serviço.
 
-A aplicação está conectada inicialmente ao banco de dados em memória **H2**, mas está preparada para migração futura para **MySQL**.
+A aplicação está conectada para desenvolvimento ao banco de dados em memória **H2**, mas em produção ela utiliza o **PostgreSql**.
 
 ---
 
@@ -14,7 +14,7 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
     - Spring Data JPA
     - Spring Validation
 - **H2 Database (desenvolvimento)**
-- **MySQL (produção)**
+- **PostgreSql (produção)**
 - **Swagger (Springdoc OpenAPI)**
 - **Maven**
 
@@ -22,7 +22,7 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
 
 ## 📦 Funcionalidades da API
 
-- ✅ Criar um atendimento
+- ✅ Criar um usuario e atendimento
 - ✅ Listar todos os atendimentos
 - ✅ Buscar atendimento por ID
 - ✅ Atualizar atendimento
@@ -35,6 +35,15 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
 
 ## 🗃️ Modelo de Dados
 
+### 📌 Entidade `Usuario`
+
+| Campo           | Tipo             | Descrição                             |
+|----------------|------------------|---------------------------------------|
+| `id`           | Long             | Identificador único                   |
+| `email`        | String           | Email do usuário                      |
+| `username`     | String           | Nome de usuário                       |
+| `password`     | String           | Senha do usuário                      |
+
 ### 📌 Entidade `Atendimento`
 
 | Campo           | Tipo             | Descrição                             |
@@ -43,8 +52,7 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
 | `cliente`      | String           | Nome do cliente                       |
 | `descricao`    | String           | Descrição do atendimento              |
 | `status`       | Enum             | Status do atendimento (`ABERTO`, `EM_ANDAMENTO`, `FINALIZADO`) |
-| `dataCriacao`  | LocalDateTime    | Registrado automaticamente            |
-| `dataAtualizacao` | LocalDateTime | Atualizado automaticamente            |
+| `dataAtendimento`  | LocalDate    | Registrado automaticamente            |
 
 ---
 
@@ -53,19 +61,26 @@ A aplicação está conectada inicialmente ao banco de dados em memória **H2**,
 Após rodar a aplicação, acesse o Swagger UI para testar a API:
 🔗 http://localhost:8080/swagger-ui.html
 
+### Exemplo de JSON para criar usuario:
+```json
+{
+  "email": "teste@teste.com",
+  "username": "Jonh Doe",
+  "password": "000"
+}
+```
+
 ### Exemplo de JSON para criar atendimento:
 ```json
 {
-  "cliente": "Maria Silva",
-  "descricao": "Suporte técnico",
-  "status": "ABERTO"
+  "descricao": "Suporte técnico"
 }
 ```
 
 ## 🛠️ Como executar o projeto localmente
 ```bash
 # Clone o repositório
-git clone https://github.com/seunome/gerenciador-atendimentos.git
+git clone https://github.com/ppablolds/API-de-Atendimentos.git
 cd gerenciador-atendimentos
 
 # Compile o projeto
@@ -76,10 +91,10 @@ cd gerenciador-atendimentos
 ```
 
 ## 💡 Próximos Passos
- - ✅ Migrar do banco H2 para MySQL ✅
+ - ✅ Migrar do banco H2 para PostgreSql ✅
  - ✅ Implementar autenticação com Spring Security e JWT ✅
- - 🧪 Adicionar testes unitários e de integração 
- - 📊 Gerar relatórios por status
+ - ✅ Adicionar testes unitários e de integração ✅
+ - ✅ Gerar relatórios por status ✅
 
 ## 👨‍💻 Autor
 Pablo Silva <br />
